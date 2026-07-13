@@ -130,7 +130,6 @@ const resolvers = {
     authorCount: () => authors.length,
     allBooks: (root, {author, genre}) => {
       let res = books;
-      console.log(res);
       if(author) res = res.filter(book => book.author === author);
       if(genre) res = res.filter(book => book.genres.includes(genre));
       return res;
