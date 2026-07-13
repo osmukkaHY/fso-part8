@@ -1,4 +1,26 @@
 import { useState } from 'react'
+import {gql} from "@apollo/client"
+import {useMutation} from "@apollo/client/react"
+
+const CREATE_BOOK = gql`
+  mutation addBookDynamic(
+    $title: String!,
+    $author: String!,
+    $published: Int!
+    $genres: [String!]!){
+      addBook(
+        title: $title
+        author: $author
+        published: $published
+        genres: $genres
+      ) {
+        title
+        author
+        published
+        genres
+      }
+  }
+`
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -6,6 +28,7 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const [createBook] = useMutation(CREATE_BOOK);
 
   if (!props.show) {
     return null
@@ -14,7 +37,12 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    console.log('add book...')
+    createBook({variables: {
+      title,
+      author,
+      published: parseInt(published),
+      genres
+    }})
 
     setTitle('')
     setPublished('')
@@ -32,26 +60,32 @@ const NewBook = (props) => {
     <div>
       <form onSubmit={submit}>
         <div>
-          title
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <label>
+            title
+            <input
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </label>
         </div>
         <div>
-          author
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <label>
+            author
+            <input
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </label>
         </div>
         <div>
-          published
-          <input
-            type="number"
-            value={published}
-            onChange={({ target }) => setPublished(target.value)}
-          />
+          <label>
+            published
+            <input
+              type="number"
+              value={published}
+              onChange={({ target }) => setPublished(target.value)}
+            />
+          </label>
         </div>
         <div>
           <input

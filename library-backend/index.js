@@ -156,9 +156,8 @@ const resolvers = {
     addBook: (root, args) => {
       const newBook = {...args, id: uuid()}
       books = books.concat(newBook);
-      console.log(books);
-      
-      if(!authors.includes(newBook.author)) {
+
+      if(!authors.map(author => author.name).includes(newBook.author)) {
         const newAuthor = {
           name: newBook.author,
           born: null,
