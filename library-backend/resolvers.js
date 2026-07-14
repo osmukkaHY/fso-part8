@@ -24,7 +24,6 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args) => {
-      console.log(args.title);
       if(await Book.exists({title: args.title})) {
         throw new GraphQLError(`Book title must be unique: ${args.title}`, {
           extensions: {
@@ -35,8 +34,22 @@ const resolvers = {
       }
 
       const authorObject = await Author.findOne({name: args.author});
-      const newBook = new Book({...args, author: authorObject._id});
-      return newBook.save();
+      if(!authorObject) {
+        throw new GraphQLError(`Author not found: ${args.author}`, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.author
+          }
+        });
+      }
+
+      try {
+        const newBook = new Book({...args, author: authorObject._id});
+        return newBook.save();
+      }
+      catch (e) {
+        throw new GraphQLError(`Couldn't save book: ${e}`)
+      }
     },
 
     editAuthor: async (root, args) => {
@@ -46,7 +59,12 @@ const resolvers = {
         author.born = args.setBornTo;
       }
       else {
-        author = new Author({name: args.name, born: args.setBornTo});
+        try {
+          author = new Author({name: args.name, born: args.setBornTo});
+        }
+        catch (e) {
+          throw new GraphQLError(`Couldn't update author: ${e}`);
+        }
       }
       return author.save();
     }
