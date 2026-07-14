@@ -13,24 +13,31 @@ const resolvers = {
     bookCount: async () => await Book.collection.countDocuments(),
     authorCount: async () => await Author.collection.countDocuments(),
     allBooks: async (root, {author, genre}) => {
-      let res = await Book.find({});
+      let res = await Book.find({}).populate("author");
+      if(!res) return undefined;
       if(author) {
-        const authorId = (await Author.findOne({name: author}))._id;
+        const authorObject = (await Author.findOne({name: author}));
+        if(!authorObject) return null;
+        const authorId = authorObject._id;
         res = res.filter(book => book.author.toString() === authorId.toString());
       }
       if(genre) res = res.filter(book => book.genres.includes(genre));
       return res;
     },
     allAuthors: async () => await Author.find({}),
-    me: async () => {
-      // TODO
+    me: async (root, args, context) => {
+      return context.currentUser;
     }
   },
 
   Mutation: {
     addBook: async (root, args, context) => {
       if(!context.currentUser) {
-        throw new GraphQLError("User must be logged in to add a book");
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "UNAUTHENTICATED"
+          }
+        });
       }
       if(await Book.exists({title: args.title})) {
         throw new GraphQLError(`Book title must be unique: ${args.title}`, {
@@ -41,19 +48,16 @@ const resolvers = {
         });
       }
 
-      const authorObject = await Author.findOne({name: args.author});
-      if(!authorObject) {
-        throw new GraphQLError(`Author not found: ${args.author}`, {
-          extensions: {
-            code: "BAD_USER_INPUT",
-            invalidArgs: args.author
-          }
-        });
+      if(!await Author.exists({name: args.author})) {
+        const newAuthor = Author({name: args.author})
+        await newAuthor.save()
       }
 
       try {
+        const authorObject = await Author.findOne({name: args.author});
         const newBook = new Book({...args, author: authorObject._id});
-        return newBook.save();
+        const created = await newBook.save();
+        return {...args, id: created.toString(), author: {name: authorObject.name, born: authorObject.born}};
       }
       catch (e) {
         throw new GraphQLError(`Couldn't save book: ${e}`)
@@ -62,7 +66,11 @@ const resolvers = {
 
     editAuthor: async (root, args, context) => {
       if(!context.currentUser) {
-        throw new GraphQLError("User must be logged in to edit an author");
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "UNAUTHENTICATED"
+          }
+        });
       }
       let author = undefined;
       if(await Author.exists({name: args.name})) {
@@ -70,12 +78,7 @@ const resolvers = {
         author.born = args.setBornTo;
       }
       else {
-        try {
-          author = new Author({name: args.name, born: args.setBornTo});
-        }
-        catch (e) {
-          throw new GraphQLError(`Couldn't update author: ${e}`);
-        }
+        return null;
       }
       return author.save();
     },
@@ -95,22 +98,32 @@ const resolvers = {
     },
 
     login: async (root, args) => {
-    const user = await User.findOne({ username: args.username })
+      const user = await User.findOne({ username: args.username })
 
-    if ( !user || args.password !== 'secret' ) {
-      throw new GraphQLError('wrong credentials', {
-        extensions: {
-          code: 'BAD_USER_INPUT'
-        }
-      })        
-    }
+      if ( !user || args.password !== 'secret' ) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })        
+      }
 
-    const userForToken = {
-      username: user.username,
-      id: user._id,
-    }
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
 
-    return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
+
+    _resetDatabase: async () => {
+      if (process.env.NODE_ENV !== 'test') {
+        throw new GraphQLError('_resetDatabase is only available in test mode')
+      }
+      await Author.deleteMany({})
+      await Book.deleteMany({})
+      await User.deleteMany({})
+      return true
     },
   }
 }
