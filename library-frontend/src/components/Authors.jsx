@@ -18,6 +18,7 @@ const Authors = (props) => {
 
   const addBirthYear = e => {
     e.preventDefault();
+    if(!authorName) return
 
     editAuthor({
       variables: {
@@ -54,11 +55,15 @@ const Authors = (props) => {
         <div>
           <label>
             name
-            <input
-              type="text"
-              value={authorName}
+            <select
+              name="authorName"
               onChange={({target}) => setAuthorName(target.value)}
-            />
+            >
+              <option disabled selected value>- Select a name -</option>
+              {authors.map(a => (
+                <option value={a.name}>{a.name}</option>
+              ))}
+            </select>
           </label>
         </div>
         <div>
