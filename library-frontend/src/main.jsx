@@ -7,7 +7,6 @@ import App from './App.jsx'
 
 const authLink = new SetContextLink(({headers}) => {
   const token = localStorage.getItem("library-user-token");
-  console.log("token", token)
   return {
     headers: {
       ...headers,

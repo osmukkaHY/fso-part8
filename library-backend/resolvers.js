@@ -26,7 +26,11 @@ const resolvers = {
     },
     allAuthors: async () => await Author.find({}),
     me: async (root, args, context) => {
-      return context.currentUser;
+      console.log(context)
+      return {
+        username: context.currentUser.username,
+        favoriteGenre: context.currentUser.favoriteGenre
+      }
     }
   },
 
@@ -86,6 +90,7 @@ const resolvers = {
 
     createUser: async (root, args) => {
     const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
+    console.log(user)
 
     return user.save()
       .catch(e => {
