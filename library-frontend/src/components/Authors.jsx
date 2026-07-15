@@ -69,9 +69,10 @@ const Authors = (props) => {
           </label>
         </div>
         <div>
-          <label>
+          <label htmlFor="born">
             born
             <input
+              id="born"
               type="text"
               value={authorBirthYear}
               onChange={({target}) => setAuthorBirthYear(target.value)}
