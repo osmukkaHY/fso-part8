@@ -26,7 +26,6 @@ const resolvers = {
     },
     allAuthors: async () => await Author.find({}),
     me: async (root, args, context) => {
-      console.log(context)
       return {
         username: context.currentUser.username,
         favoriteGenre: context.currentUser.favoriteGenre
@@ -36,6 +35,7 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, context) => {
+      console.log(args, context);
       if(!context.currentUser) {
         throw new GraphQLError("not authenticated", {
           extensions: {
