@@ -31,6 +31,7 @@ const ALL_BOOKS = gql`
         born
       },
       id,
+      genres
     }
   }
 `

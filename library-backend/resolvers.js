@@ -66,6 +66,7 @@ const resolvers = {
 
     editAuthor: async (root, args, context) => {
       if(!context.currentUser) {
+        console.log("unauthenticated");
         throw new GraphQLError("not authenticated", {
           extensions: {
             code: "UNAUTHENTICATED"
@@ -110,6 +111,7 @@ const resolvers = {
 
       const userForToken = {
         username: user.username,
+        favoriteGenre: user.favoriteGenre,
         id: user._id,
       }
 
