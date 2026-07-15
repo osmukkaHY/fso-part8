@@ -21,6 +21,7 @@ const Recommended = ({show}) => {
   return (
     <div>
       <h2>recommendations</h2>
+      <p>books in your favorite genre <em>{genre}</em></p>
 
       <table>
         <tbody>

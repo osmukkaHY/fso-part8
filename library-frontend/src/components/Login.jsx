@@ -10,7 +10,6 @@ const LoginForm = ({show, setToken, setPage, setMessage}) => {
   const client = useApolloClient();
 
   const [login] = useMutation(queries.LOGIN, {
-    //refetchQueries: [{query: queries.USER_FAVORITE_GENRE}],
     onCompleted: async (data) => {
       console.log(data)
       if(data.errors) {
