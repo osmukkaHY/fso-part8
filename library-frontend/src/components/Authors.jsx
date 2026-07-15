@@ -70,7 +70,7 @@ const Authors = (props) => {
         </div>
         <div>
           <label>
-            birth year
+            born
             <input
               type="text"
               value={authorBirthYear}
@@ -78,7 +78,7 @@ const Authors = (props) => {
             />
           </label>
         </div>
-        <button type="submit">submit</button>
+        <button type="submit">update author</button>
       </form>
       </div>)}
     </div>

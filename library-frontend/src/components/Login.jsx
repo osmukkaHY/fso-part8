@@ -28,6 +28,8 @@ const LoginForm = ({show, setToken, setPage, setMessage}) => {
       setPage("authors");
     },
     onError: e => {
+      setMessage("login failed");
+      setTimeout(() => setMessage(null), 5000);
     }
   })
 
