@@ -5,6 +5,7 @@ import queries from "../queries.js"
 const Books = (props) => {
   const res = useQuery(queries.ALL_BOOKS);
   const [filter_, setFilter] = useState("");
+  console.log(localStorage.getItem("library-user-token"));
   if (!props.show) {
     return null
   }
@@ -12,6 +13,7 @@ const Books = (props) => {
     return <div>loading...</div>
 
   const handleFilterChange = async (newFilter) => {
+    console.log(newFilter);
     setFilter(newFilter);
   }
 
