@@ -50,6 +50,8 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      {localStorage.getItem("library-user-token") && (
+      <div>
       <h3>Set birthyear</h3>
       <form onSubmit={addBirthYear}>
         <div>
@@ -78,6 +80,7 @@ const Authors = (props) => {
         </div>
         <button type="submit">submit</button>
       </form>
+      </div>)}
     </div>
   )
 }
