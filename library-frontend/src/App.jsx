@@ -27,7 +27,7 @@ const App = () => {
         {!token && (<button onClick={() => setPage("login")}>login</button>)}
         {token && <button onClick={() => setPage('add')}>add book</button>}
         {token && <button onClick={() => setPage('recommended')}>recommended</button>}
-        {token && <button onClick={() => logout()}>log out</button>}
+        {token && <button onClick={() => logout()}>logout</button>}
       </div>
 
       <Authors show={page === 'authors'} />

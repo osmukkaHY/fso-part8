@@ -26,9 +26,13 @@ const resolvers = {
     },
     allAuthors: async () => await Author.find({}),
     me: async (root, args, context) => {
+      console.log(context.currentUser)
+      if(!context.currentUser)
+        return null;
       return {
         username: context.currentUser.username,
-        favoriteGenre: context.currentUser.favoriteGenre
+        favoriteGenre: context.currentUser.favoriteGenre,
+        id: context.currentUser._id
       }
     }
   },
