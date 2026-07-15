@@ -3,7 +3,7 @@ import {useMutation, useQuery} from "@apollo/client/react"
 import {useApolloClient} from "@apollo/client/react"
 import queries from "../queries.js"
 
-const LoginForm = ({show, setToken}) => {
+const LoginForm = ({show, setToken, setPage, setMessage}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const res = useQuery(queries.USER_FAVORITE_GENRE);
@@ -12,7 +12,12 @@ const LoginForm = ({show, setToken}) => {
   const [login] = useMutation(queries.LOGIN, {
     //refetchQueries: [{query: queries.USER_FAVORITE_GENRE}],
     onCompleted: async (data) => {
-      console.log("logged in")
+      console.log(data)
+      if(data.errors) {
+        setMessage("login failed");
+        setTimeout(() => setMessage(null), 5000);
+      return;
+      }
       const token = data.login.value;
       setToken(token);
       localStorage.setItem("library-user-token", token);
@@ -21,9 +26,9 @@ const LoginForm = ({show, setToken}) => {
       })
       console.log("User data", res.data)
       localStorage.setItem("user-favorite-genre", res.data.me.favoriteGenre)
+      setPage("authors");
     },
     onError: e => {
-      console.log("error:", e);
     }
   })
 

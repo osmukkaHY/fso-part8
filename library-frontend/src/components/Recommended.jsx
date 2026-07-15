@@ -20,7 +20,7 @@ const Recommended = ({show}) => {
   console.log("Books", books)
   return (
     <div>
-      <h2>books</h2>
+      <h2>recommendations</h2>
 
       <table>
         <tbody>

@@ -58,7 +58,7 @@ const Authors = (props) => {
           <label>
             name
             <select
-              name="authorName"
+              name="name"
               onChange={({target}) => setAuthorName(target.value)}
             >
               <option disabled selected value>- Select a name -</option>

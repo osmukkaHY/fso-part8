@@ -70,10 +70,13 @@ const NewBook = (props) => {
           </label>
         </div>
         <div>
+          <label>
+          genre
           <input
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
+          </label>
           <button onClick={addGenre} type="button">
             add genre
           </button>

@@ -10,6 +10,7 @@ import {useApolloClient} from "@apollo/client/react"
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(localStorage.getItem("library-user-token"));
+  const [message, setMessage] = useState(null);
   const client = useApolloClient();
 
   const logout = async () => {
@@ -29,6 +30,7 @@ const App = () => {
         {token && <button onClick={() => setPage('recommended')}>recommended</button>}
         {token && <button onClick={() => logout()}>logout</button>}
       </div>
+      <p>{message}</p>
 
       <Authors show={page === 'authors'} />
 
@@ -38,7 +40,7 @@ const App = () => {
 
       <NewBook show={page === 'add'} />
 
-      <Login show={page === "login"} setToken={setToken} />
+      <Login show={page === "login"} setToken={setToken} setPage={setPage} setMessage={setMessage} />
     </div>
   )
 }
