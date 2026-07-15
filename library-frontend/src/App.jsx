@@ -13,6 +13,7 @@ const App = () => {
   const client = useApolloClient();
 
   const logout = async () => {
+    setPage("login");
     setToken(null);
     localStorage.clear();
     await client.clearStore();

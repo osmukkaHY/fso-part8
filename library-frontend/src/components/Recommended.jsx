@@ -7,14 +7,16 @@ const Recommended = ({show}) => {
 
   if(!show)
     return null;
+  if(res.loading)
+    return (<p>loading</p>)
 
-  const books = res.data.allBooks.map(bookObject => ({
+  const books = res.data ? res.data.allBooks.map(bookObject => ({
     title: bookObject.title,
     published: bookObject.published,
     author: bookObject.author.name,
     genres: bookObject.genres,
     id: bookObject.id
-  }));
+  })) : null;
   console.log("Books", books)
   return (
     <div>
