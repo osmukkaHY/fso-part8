@@ -36,6 +36,21 @@ const ALL_BOOKS = gql`
   }
 `
 
+const BOOKS_BY_GENRE = gql`
+  query booksByGenre($genre: String){
+    allBooks(genre: $genre) {
+      title,
+      published,
+      author {
+        name
+        born
+      },
+      id,
+      genres
+    }
+  }
+`
+
 const ALL_AUTHORS = gql`
   query {
     allAuthors {
@@ -74,11 +89,20 @@ const LOGIN = gql`
     }
   }
 `
+const USER_FAVORITE_GENRE = gql`
+query {
+  me {
+    favoriteGenre
+  }
+}
+`
 
 export default {
     CREATE_BOOK,
     ALL_BOOKS,
+    BOOKS_BY_GENRE,
     ALL_AUTHORS,
     EDIT_AUTHOR,
-    LOGIN
+    LOGIN,
+    USER_FAVORITE_GENRE
 }
