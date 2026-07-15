@@ -27,7 +27,7 @@ const LoginForm = ({show, setToken, setPage, setMessage}) => {
       localStorage.setItem("user-favorite-genre", res.data.me.favoriteGenre)
       setPage("authors");
     },
-    onError: e => {
+    onError: () => {
       setMessage("login failed");
       setTimeout(() => setMessage(null), 5000);
     }
@@ -61,7 +61,7 @@ const LoginForm = ({show, setToken, setPage, setMessage}) => {
           />
           </label>
         </div>
-        <button type='submit'>log in</button>
+        <button type='submit'>login</button>
       </form>
     </div>
   )
