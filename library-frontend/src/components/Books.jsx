@@ -9,7 +9,12 @@ const Books = (props) => {
   if(res.loading)
     return <div>loading...</div>
 
-  const books = res.data.allBooks;
+  const books = res.data.allBooks.map(bookObject => ({
+    title: bookObject.title,
+    published: bookObject.published,
+    author: bookObject.author.name,
+    id: bookObject.id
+  }));
 
   return (
     <div>
